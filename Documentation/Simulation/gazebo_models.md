@@ -1,5 +1,7 @@
 # Gazebo Models
 
+> Work in progress...
+
 Most models are directly available as a part of [gazebo_models](https://github.com/osrf/gazebo_models) repository. 
 
 ## Microsoft Kinect
