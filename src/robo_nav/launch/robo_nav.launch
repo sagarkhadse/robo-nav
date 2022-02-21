@@ -8,13 +8,19 @@
     <param name="use_sonar" value="false" />
     <param name="pulse" value="1.0" />
   </node>
+  
+  <param name="pioneer_joy_controller/dev" value="/dev/input/js4"/>
+  <include file="$(find p2os_launch)/launch/teleop_joy.launch"/>
+  <param name="axis_vw" type="int" value="3" />
 
   <!-- Kinect Node -->
-  <include file="$(find freenect_launch)/launch/freenect.launch" args="depth_registration:=true" />
+  <include file="$(find freenect_launch)/launch/freenect.launch">
+    <arg name="depth_registration" value="true"/>
+  </include>
 
   <!-- Static TF publisher between camera_link and base_link -->
   <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" 
-        args="0 0 0.35 -1.57 -0.02 -1.483 base_link camera_link" />
+        args="0 0 0.35 0 0 0 base_link camera_link" />
 
   <!-- RTAB-MAP -->
   <group ns="rtabmap">
