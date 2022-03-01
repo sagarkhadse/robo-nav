@@ -1,11 +1,7 @@
 <launch>
 
-  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" 
-        args="0 0 0 1.57 3.14 1.57 base_link camera_rgb_optical_frame" /> -->
-
   <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" 
         args="0 0 0.35 -1.57 -0.02 -1.483 base_link camera_rgb_optical_frame" />
-
 
   <group ns="rtabmap">
 
