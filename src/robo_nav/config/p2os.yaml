@@ -1,0 +1,6 @@
+# [Driver]
+port: "/dev/ttyUSB0"
+
+# [Sonar]
+use_sonar: "false"
+pulse: "1.0"

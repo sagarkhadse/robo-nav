@@ -1,0 +1,31 @@
+rtabmap: 
+  rtabmap:
+    frame_id: "base_link"
+    odom_frame_id: "odom"
+    queue_size: 10
+
+    subscribe_depth: false
+    subscribe_rgb: false
+    subscribe_rgbd: true
+    subscribe_odom_info: false
+
+    proj_max_ground_height: 0.5
+    proj_max_height: 1.0
+
+    Kp:
+      MaxDepth: 4
+      RoiRatios: "0.0 0.0 0.3 0.1"
+
+    RGBD:
+      AngularUpdate: 0.0
+      LinearUpdate: 0.0
+      OptimizeFromGraphEnd: false
+
+    Reg:
+      Force3DoF: true
+
+    Optimizer:
+      Slam2D: true
+      Strategy: 2
+
+
