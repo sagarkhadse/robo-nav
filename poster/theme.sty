@@ -1,0 +1,87 @@
+\definecolor{white}{rgb}{255,255,255}
+
+\definecolorpalette{RITPalette} {
+  \definecolor{primary}{HTML}{F76902}
+  \definecolor{secondary}{HTML}{171717}
+  \definecolor{primary_text}{HTML}{EDEDED}
+  \definecolor{secondary_text}{HTML}{EDEDED}
+  \definecolor{text}{HTML}{171717}
+  \definecolor{bg}{HTML}{EDEDED}
+}
+
+\definecolorstyle{RITStyle} {
+  \usecolorpalette{RITPalette}
+}{
+  % background
+  \colorlet{backgroundcolor}{white}
+  \colorlet{framecolor}{white}
+  % title colors
+  \colorlet{titlefgcolor}{secondary_text}
+  \colorlet{titlebgcolor}{secondary}
+  % block colors
+  \colorlet{blocktitlebgcolor}{primary}
+  \colorlet{blocktitlefgcolor}{primary_text}
+  \colorlet{blockbodybgcolor}{white}
+  \colorlet{blockbodyfgcolor}{text}
+  % innerblock colors
+  \colorlet{innerblocktitlebgcolor}{white}
+  \colorlet{innerblocktitlefgcolor}{text}
+  \colorlet{innerblockbodybgcolor}{primary}
+  \colorlet{innerblockbodyfgcolor}{primary_text}
+  % note colors
+  \colorlet{notefgcolor}{secondary_text}
+  \colorlet{notebgcolor}{secondary}
+  \colorlet{noteframecolor}{secondary}
+}
+
+\definebackgroundstyle{RITBackgroundStyle}{
+    \draw[line width=0pt, color=framecolor, fill=backgroundcolor]
+    (bottomleft) rectangle (topright);
+}
+
+\definetitlestyle{RITTitleStyle}{
+    width=\textwidth, linewidth=5pt, titletotopverticalspace=0in
+}{
+    \begin{scope}[line width=\linewidth,]
+    (\titleposleft,\titleposbottom)--(\titleposright,\titleposbottom);
+    \end{scope}
+}
+
+\defineblockstyle{RITBlockStyle}{
+    titlewidthscale=1, bodywidthscale=1, roundedcorners=5
+}{
+    \draw[color=framecolor, fill=blockbodybgcolor,
+    rounded corners=\blockroundedcorners] (blockbody.south west)
+    rectangle (blockbody.north east);
+    \ifBlockHasTitle
+    \draw[color=framecolor, fill=blocktitlebgcolor,
+    rounded corners=\blockroundedcorners] (blocktitle.south west)
+    rectangle (blocktitle.north east);
+    \fi
+}
+
+\definelayouttheme{RITTheme}{
+    \usecolorstyle[colorPalette=RITPalette]{RITStyle}
+    \usebackgroundstyle{RITBackgroundStyle}
+    \usetitlestyle{Filled}
+    \useblockstyle{RITBlockStyle}
+    \useinnerblockstyle{Default}
+    \usenotestyle{Default}
+}
+
+\renewcommand\TP@maketitle{
+  \begin{minipage}{0.06\linewidth}
+    \includegraphics[height=\linewidth]{assets/RIT_Tiger.png}
+  \end{minipage}
+  \begin{minipage}{0.875\linewidth}
+    \centering
+    \color{titlefgcolor}
+    {\bfseries \Huge \@title \par}
+    \vspace*{1em}
+    {\huge \@author}
+  \end{minipage}
+  \begin{minipage}{0.06\linewidth}
+    \includegraphics[height=\linewidth]{assets/CS_Logo.png}
+  \end{minipage}
+}
+\makeatother

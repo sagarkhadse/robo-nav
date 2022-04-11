@@ -1,0 +1,55 @@
+\documentclass[25pt, , innermargin=-1in, blockverticalspace=0in]{tikzposter}
+\geometry{papersize={36in, 24in}}
+\usepackage{theme}
+\usepackage[backend=biber,style=numeric]{biblatex}
+
+\addbibresource{poster.bib}
+
+\usetheme{RITTheme}
+
+\title{Autonomous Navigation for Mobile Robots}
+\author{Sagar Khadse | Zack Butler}
+
+\begin{document}
+  \maketitle
+  \begin{columns}
+    \column{.25}
+    \block{Abstract}{
+      Mobile Robots are developed to be able to move in an environment and 
+      perform specific tasks such as warehouse robots moving packages and 
+      stocking shelves efficiently. GPS can help when navigating in outdoor
+      environments but fails when used indoors. These robots need to be able to 
+      sense their environment while also being able to self localize itself in 
+      the environment for efficient path planning. An autonomous navigation 
+      system avoids the need to manually program the robot path and allows the 
+      robot to handle minor changes in the environment. This project aims to 
+      implement Simultaneous Localization and Mapping using a RGBD camera 
+      mounted on top of a robot base.
+    }
+    \block{Objectives}{
+      \begin{enumerate}
+        \item Researching available SLAM algorithms that could be used for this 
+        application and selecting the best fit.
+        \item Selecting an indoor environment and generate a 3D map.
+        \item Testing localization of the mobile robot within the generated map 
+        while navigating through it.
+      \end{enumerate}
+    }
+    \column{.25}
+    \block{Architecture}{
+      this is the abstract.
+    }
+    \column{.5}
+    \block{Mapping}{
+      this is the abstract.
+    }
+  \end{columns}
+
+  \node [above right, minimum width=\textwidth, minimum height=2in, 
+  align=right, fill=titlebgcolor, text=titlefgcolor] 
+    at (bottomleft) {
+      \begin{minipage}{\linewidth}
+        \printbibliography[heading=none]
+      \end{minipage}
+    };
+\end{document}
