@@ -8,9 +8,14 @@ rtabmap:
     subscribe_rgb: false
     subscribe_rgbd: true
     subscribe_odom_info: false
-
-    proj_max_ground_height: 0.5
-    proj_max_height: 1.0
+    
+    Grid:
+      CellSize: 0.05
+      MaxGroundHeight: 0.5
+      MaxObstacleHeight: 1.0
+      
+    GridGlobal:
+      Eroded: true
 
     Kp:
       MaxDepth: 4
@@ -20,12 +25,9 @@ rtabmap:
       AngularUpdate: 0.0
       LinearUpdate: 0.0
       OptimizeFromGraphEnd: false
+      OptimizeMaxError: 80.0
 
     Reg:
       Force3DoF: true
-
-    Optimizer:
-      Slam2D: true
-      Strategy: 2
 
 

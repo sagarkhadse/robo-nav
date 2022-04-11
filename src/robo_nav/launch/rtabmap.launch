@@ -1,5 +1,5 @@
 <launch>
-
+  <rosparam param="use_sim_time">true</rosparam>
   <rosparam file="$(find robo_nav)/config/rtabmap.yaml"/>
 
   <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" 

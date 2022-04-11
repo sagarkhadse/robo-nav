@@ -1,9 +1,11 @@
 <launch>
 
+  <!-- parameters -->
+  <rosparam file="$(find robo_nav)/config/p2os.yaml"/>
+  <rosparam file="$(find robo_nav)/config/rtabmap.yaml"/>
+
   <!-- p2os -->
-  <node pkg="p2os_driver" type="p2os_driver" name="p2os_driver">
-    <rosparam file="$(find robo_nav)/config/p2os.yaml">
-  </node>
+  <node pkg="p2os_driver" type="p2os_driver" name="p2os_driver"/>
   
   <param name="pioneer_joy_controller/dev" value="/dev/input/js4"/>
   <include file="$(find p2os_launch)/launch/teleop_joy.launch"/>
@@ -16,10 +18,9 @@
 
   <!-- Static TF publisher between camera_link and base_link -->
   <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" 
-        args="0 0 0.35 -1.57 -0.02 -1.483 base_link camera_link" />
+        args="0 0 0.35 0 -0.1 0 base_link camera_link" />
 
   <!-- RTAB-MAP -->
-  <rosparam file="$(find robo_nav)/config/rtabmap.yaml"/>
   <group ns="rtabmap">
 
     <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
