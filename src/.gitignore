@@ -1,0 +1,3 @@
+# ignore URDF model package
+amr-ros-config/
+common-sensors/

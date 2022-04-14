@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<robot name="pioneer_kinect" xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- chassis -->
+  <xacro:include filename="$(find amr_robots_description)/urdf/pioneer3dx.urdf.xacro" />
+  <!-- kinect -->
+  <xacro:property name="cam_px" value="0" />
+	<xacro:property name="cam_py" value="0" />
+	<xacro:property name="cam_pz" value="0.35" />
+	<xacro:property name="cam_or" value="0" />
+	<xacro:property name="cam_op" value="-0.14" />
+	<xacro:property name="cam_oy" value="0" />
+
+  <xacro:include filename="$(find common_sensors)/urdf/sensors/kinect.urdf.xacro" />
+  <xacro:sensor_kinect parent="base_link"/>
+</robot>

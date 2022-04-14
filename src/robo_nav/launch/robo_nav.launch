@@ -1,27 +1,54 @@
 <launch>
 
-  <!-- parameters -->
-  <rosparam file="$(find robo_nav)/config/p2os.yaml"/>
-  <rosparam file="$(find robo_nav)/config/rtabmap.yaml"/>
-
-  <!-- p2os -->
-  <node pkg="p2os_driver" type="p2os_driver" name="p2os_driver"/>
+  <!-- arguments -->
+  <arg name="clear_map" default="false"/>
+  <arg name="localize" default="false"/>
+  <arg name="sim" default="false"/>
   
-  <param name="pioneer_joy_controller/dev" value="/dev/input/js4"/>
-  <include file="$(find p2os_launch)/launch/teleop_joy.launch"/>
-  <param name="axis_vw" type="int" value="3" />
+  <arg     if="$(arg clear_map)" name="rtabmap_args"  default="--delete_db_on_start"/>
+  <arg unless="$(arg clear_map)" name="rtabmap_args"  default=""/>
 
-  <!-- Kinect Node -->
-  <include file="$(find freenect_launch)/launch/freenect.launch">
-    <arg name="depth_registration" value="true"/>
-  </include>
+  <arg     if="$(arg localize)" name="rviz_args"  default="-d $(find robo_nav)/config/localization.rviz"/>
+  <arg unless="$(arg localize)" name="rviz_args"  default="-d $(find robo_nav)/config/mapping.rviz"/>
 
-  <!-- Static TF publisher between camera_link and base_link -->
-  <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" 
-        args="0 0 0.35 0 -0.1 0 base_link camera_link" />
+  <param name="robot_description" command="$(find xacro)/xacro '$(find robo_nav)/models/robot.xacro'"/>
+
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+
+  <group if="$(arg sim)">
+    <rosparam param="use_sim_time">true</rosparam>
+
+    <!-- Static TF publisher between camera_link and base_link -->
+    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" 
+        args="0 0 0.35 -1.57 -0.02 -1.483 base_link camera_rgb_optical_frame" /> -->
+  </group>
+
+  <group unless="$(arg sim)">
+
+    <!-- p2os -->
+    <rosparam file="$(find robo_nav)/config/p2os.yaml"/>
+    <node pkg="p2os_driver" type="p2os_driver" name="p2os_driver"/>
+    
+    <!-- joystick -->
+    <param name="pioneer_joy_controller/dev" value="/dev/input/js4"/>
+    <include file="$(find p2os_launch)/launch/teleop_joy.launch"/>
+    <param name="axis_vw" type="int" value="3" />
+
+    <!-- Kinect Node -->
+    <include file="$(find freenect_launch)/launch/freenect.launch">
+      <arg name="depth_registration" value="true"/>
+    </include>
+
+    <!-- Static TF publisher between camera_link and base_link -->
+    <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="link1_broadcaster" 
+          args="0 0 0.35 0 -0.1 0 base_link camera_link" /> -->
+
+  </group>
 
   <!-- RTAB-MAP -->
   <group ns="rtabmap">
+
+    <rosparam file="$(find robo_nav)/config/rtabmap.yaml"/>
 
     <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
       <remap from="rgb/image"       to="/camera/rgb/image_rect_color"/>
@@ -30,11 +57,17 @@
       <remap from="rgbd_image"      to="rgbd_image"/>
     </node>
 
-    <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="--delete_db_on_start">
-          <remap from="odom" to="/pose"/>
-          <remap from="rgbd_image" to="rgbd_image"/>
+    <node name="rtabmap" pkg="rtabmap_ros" type="rtabmap" output="screen" args="$(arg rtabmap_args)">
+
+      <!-- localization mode -->
+      <param     if="$(arg localize)" name="Mem/IncrementalMemory" type="string" value="false"/>
+      <param unless="$(arg localize)" name="Mem/IncrementalMemory" type="string" value="true"/>
+      <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localize)"/>
+
+      <remap from="odom" to="/pose"/>
+      <remap from="rgbd_image" to="rgbd_image"/>
     </node>
   </group>
 
-  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find robo_nav)/config/robo_nav.rviz"/>
+  <node pkg="rviz" type="rviz" name="rviz" args="$(arg rviz_args)"/>
 </launch>

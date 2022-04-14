@@ -11,7 +11,7 @@ rtabmap:
     
     Grid:
       CellSize: 0.05
-      MaxGroundHeight: 0.5
+      MaxGroundHeight: 0.05
       MaxObstacleHeight: 1.0
       
     GridGlobal:
@@ -25,7 +25,7 @@ rtabmap:
       AngularUpdate: 0.0
       LinearUpdate: 0.0
       OptimizeFromGraphEnd: false
-      OptimizeMaxError: 80.0
+      OptimizeMaxError: 32
 
     Reg:
       Force3DoF: true
