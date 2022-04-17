@@ -1,11 +1,18 @@
-\documentclass[25pt, , innermargin=-1in, blockverticalspace=0in, blockbodyinnersep=0in]{tikzposter}
+\documentclass[20pt, , innermargin=-24mm, colspace=8mm, blockverticalspace=8mm]{tikzposter}
 \geometry{papersize={36in, 24in}}
+\usepackage[sfdefault]{cabin}
+\usepackage[T1]{fontenc}
 \usepackage{theme}
 \usepackage[backend=bibtex,style=numeric]{biblatex}
+\usepackage{wrapfig}
+\usepackage{calc}
 
 \addbibresource{poster.bib}
 
 \usetheme{RITTheme}
+
+\usetikzlibrary{positioning, shapes,arrows}
+
 
 \title{Autonomous Navigation for Mobile Robots}
 \author{Sagar Khadse | Zack Butler}
@@ -14,37 +21,116 @@
   \maketitle
   \begin{columns}
     \column{.25}
-      \block{Abstract}{
-        Mobile Robots are developed to be able to move in an environment and 
-        perform specific tasks such as warehouse robots moving packages and 
-        stocking shelves efficiently. GPS can help when navigating in outdoor
-        environments but fails when used indoors. These robots need to be able to 
-        sense their environment while also being able to self localize itself in 
-        the environment for efficient path planning. An autonomous navigation 
-        system avoids the need to manually program the robot path and allows the 
-        robot to handle minor changes in the environment. This project aims to 
-        implement Simultaneous Localization and Mapping using a RGBD camera 
-        mounted on top of a robot base.
+      \block{Introduction}{
+        Mobile Robots are developed to move in an environment and perform 
+        specified tasks. These are especially helpful in industrial warehouses 
+        to move around goods efficiently and also in situations where it is 
+        unsafe for humans to operate. Making mobile robots autonomous allows the 
+        robots to perform repeatative tasks efficiently and without the need of 
+        individual control over each robot. Autonomous mobile robots need to be 
+        able to sense the environment and navigate through it which can be 
+        achieved using Simultaneous Localization and Mapping (SLAM). This 
+        project aims to implement SLAM on mobile robots for indoor navigation
+        and improve localization by mapping the robot location on the real world
+        floor plans of the building.
+
       }
-      \block{Objectives}{
-        \begin{enumerate}
-          \item Researching available SLAM algorithms that could be used for this 
-          application and selecting the best fit.
-          \item Selecting an indoor environment and generate a 3D map.
-          \item Testing localization of the mobile robot within the generated map 
-          while navigating through it.
-        \end{enumerate}
+      \block{Hardware}{
+        \begin{tikzpicture}
+          \node[draw] {
+            Freenect
+          };
+        \end{tikzpicture}
       }
     \column{.25}
-      \block{Architecture}{
-        \centering
-        \includegraphics[width=\linewidth]{assets/placeholder.png}\\
-        System Diagram
-      }
-      \block{Map Alignment}{
-        \includegraphics[width=0.45\linewidth]{assets/placeholder.png}\hfill
-        \includegraphics[width=0.45\linewidth]{assets/placeholder.png}\\
-        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes.
+      \block{System Overview}{
+        \newlength{\tikzwidth}
+        \setlength{\tikzwidth}{\linewidth-10mm}
+        \begin{tikzpicture}[
+          block/.style={
+            rounded corners=0.4ex, font=\normalsize, fill=red!20,text centered,
+            text width=0.33\tikzwidth-1ex, anchor=north, inner sep=1ex
+          },
+          hardware/.style={block, fill=red!20},
+          rosnode/.style={block, fill=blue!20},
+          rtabmap/.style={block, fill=blue!30},
+          roscore/.style={
+            font=\large, fill=black!50, circle,
+            text width=0.10\tikzwidth, text centered
+          }
+        ]
+          \node[roscore](roscore) {
+            \textbf{ROS}
+          };
+
+          \node[rosnode][left=(0.1\tikzwidth) of roscore](freenect) {
+            \textbf{Freenect}\\
+            Interfaces with the Kinect camera and publishes RGB and depth images.
+          };
+          \node[hardware][above=0.75em of freenect](kinect) {
+            \textbf{Kinect Camera}\\
+          };
+
+          \node[rosnode][right=(0.1\tikzwidth) of roscore](p2os) {
+            \textbf{P2OS}\\
+            Interfaces with the robot chassis and publishes robot odometry data.
+          };
+          \node[hardware][above=0.75em of p2os](robot) {
+            \textbf{Robot Chassis}\\
+          };
+          
+          \node[rosnode, text width=\tikzwidth][below=2.75em of roscore](rtabmap) {
+            \textbf{RTAB-Map}\\
+            \vspace{1ex}
+            \newlength{\innerwidth}
+            \setlength{\innerwidth}{\tikzwidth-2ex}
+            \begin{tikzpicture}
+              \node[rtabmap, text width=(0.5\innerwidth-1.5ex)]
+              (mapping) {
+                \textbf{Mapping}\\\vspace{0.5ex}
+                \includegraphics[width=\linewidth]{assets/mapping.png}
+                Generates a 3D map of the environment using depht images from 
+                the camera and wheel odometry data from the robot. The RGB 
+                images are used to extract keypoints for loop closure and 
+                landmark recognition.
+              };
+              \node[rtabmap, text width=(0.5\innerwidth-1.5ex)]
+              [right=1ex of mapping](localization) {
+                \textbf{Localization}\\\vspace{1ex}
+                \includegraphics[width=\linewidth]{assets/localization.png}
+                Determines the realtime position of the robot in the stored map 
+                by extracting keypoints from RGB images and matching them 
+                against the landmarks stored in the long term database updated 
+                during the mapping process. 
+              };
+              \node[rtabmap, text width=(\innerwidth), align=justify]
+              [below=1ex of mapping, xshift=0.25\innerwidth+0.75ex](memory) {
+                \centering\textbf{Long-Term Memeory}\par
+                Stores local and global grid maps generated during the mapping 
+                process along with keypoints associated with landmarks.
+                This is helpful for maintaining information across multiple mapping and
+                localization sessions.
+              };
+            \end{tikzpicture}
+            https://github.com/introlab/rtabmap
+          };
+
+          \node[rosnode, text width=\tikzwidth, align=justify][above=5em of roscore](mapalign) {
+            \centering\textbf{Floor Plan Localization}\par
+            Uses morphology and template matching to find a corelation between 
+            the 2D occupancy grid generated by SLAM and the floor plan of the mapped area.
+          };
+          
+          \draw[-latex, line width=1mm] (kinect) -- (freenect);
+          \draw[-latex, line width=1mm] (robot) -- (p2os);
+          \draw[-latex, line width=1mm] (freenect) -- (roscore);
+          \draw[-latex, line width=1mm] (p2os) -- (roscore);
+          \draw[-latex, line width=1mm] (rtabmap) -- (roscore);
+          \draw[-latex, line width=1mm] (roscore) -- (rtabmap);
+          \draw[-latex, line width=1mm] (roscore) -- (mapalign);
+          \draw[-latex, line width=1mm] (mapalign) -- (roscore);
+
+        \end{tikzpicture}
       }
     \column{.5}
       \block{Mapping}{
@@ -54,13 +140,13 @@
         Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra.Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis
       }
       \begin{subcolumns}
-        \subcolumn{.75}
+        \subcolumn{.5}
           \block{Conclusion}{
-            Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec.
+            
           }
-        \subcolumn{.25}
-          \block{}{
-            \includegraphics[width=\linewidth]{assets/qr-code.png}
+        \subcolumn{.5}
+          \block{Future Work}{
+            
           }
       \end{subcolumns}
   \end{columns}
@@ -69,9 +155,13 @@
   \node [above right, minimum width=\textwidth, minimum height=2in, 
   align=right, fill=titlebgcolor, text=titlefgcolor] 
     at (bottomleft) {
-      \begin{minipage}{\linewidth}
+      \begin{minipage}{0.94\linewidth}
+        \renewcommand*{\bibfont}{\normalfont\small}
         \color{titlefgcolor}
         \printbibliography[heading=none]
+      \end{minipage}
+      \begin{minipage}{0.05\linewidth}
+        \includegraphics[width=\linewidth]{assets/qr-code.png}
       \end{minipage}
     };
 \end{document}

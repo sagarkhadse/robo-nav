@@ -40,7 +40,7 @@
 }
 
 \definetitlestyle{RITTitleStyle}{
-    width=\textwidth, linewidth=5pt, titletotopverticalspace=0in
+    width=\textwidth, linewidth=5pt
 }{
     \begin{scope}[line width=\linewidth,]
     (\titleposleft,\titleposbottom)--(\titleposright,\titleposbottom);
@@ -48,7 +48,8 @@
 }
 
 \defineblockstyle{RITBlockStyle}{
-    titlewidthscale=1, bodywidthscale=1, roundedcorners=5
+    titlewidthscale=1, bodywidthscale=1, roundedcorners=5, bodyinnersep=0mm, 
+    bodyverticalshift=8mm
 }{
     \draw[color=framecolor, fill=blockbodybgcolor,
     rounded corners=\blockroundedcorners] (blockbody.south west)
@@ -76,9 +77,9 @@
   \begin{minipage}{0.895\linewidth}
     \centering
     \color{titlefgcolor}
-    {\bfseries \huge \@title \par}
+    {\bfseries \Huge \@title \par}
     \vspace*{1em}
-    {\Large \@author}
+    {\huge \@author}
   \end{minipage}
   \begin{minipage}{0.05\linewidth}
     \includegraphics[height=\linewidth]{assets/CS_Logo.png}
