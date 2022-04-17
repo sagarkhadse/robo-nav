@@ -1,5 +1,9 @@
 <launch>
 
+  <!-- parameters -->
+  <rosparam file="$(find robo_nav)/config/p2os.yaml"/>
+  <rosparam file="$(find robo_nav)/config/rtabmap.yaml"/>
+
   <!-- arguments -->
   <arg name="clear_map" default="false"/>
   <arg name="localize" default="false"/>
@@ -26,7 +30,6 @@
   <group unless="$(arg sim)">
 
     <!-- p2os -->
-    <rosparam file="$(find robo_nav)/config/p2os.yaml"/>
     <node pkg="p2os_driver" type="p2os_driver" name="p2os_driver"/>
     
     <!-- joystick -->
@@ -48,8 +51,6 @@
   <!-- RTAB-MAP -->
   <group ns="rtabmap">
 
-    <rosparam file="$(find robo_nav)/config/rtabmap.yaml"/>
-
     <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
       <remap from="rgb/image"       to="/camera/rgb/image_rect_color"/>
       <remap from="depth/image"     to="/camera/depth_registered/image_raw"/>
@@ -62,7 +63,8 @@
       <!-- localization mode -->
       <param     if="$(arg localize)" name="Mem/IncrementalMemory" type="string" value="false"/>
       <param unless="$(arg localize)" name="Mem/IncrementalMemory" type="string" value="true"/>
-      <param name="Mem/InitWMWithAllNodes" type="string" value="$(arg localize)"/>
+      <param     if="$(arg localize)" name="Mem/InitWMWithAllNodes" type="string" value="false"/>
+      <param unless="$(arg localize)" name="Mem/InitWMWithAllNodes" type="string" value="true"/>
 
       <remap from="odom" to="/pose"/>
       <remap from="rgbd_image" to="rgbd_image"/>

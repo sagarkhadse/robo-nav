@@ -13,9 +13,6 @@ rtabmap:
       CellSize: 0.05
       MaxGroundHeight: 0.05
       MaxObstacleHeight: 1.0
-      
-    GridGlobal:
-      Eroded: true
 
     Kp:
       MaxDepth: 4
