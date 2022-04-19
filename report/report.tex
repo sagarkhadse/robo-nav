@@ -1,8 +1,87 @@
-\documentclass[a4paper]{report}
+\documentclass[conference, letterpaper]{IEEEtran}
 
-\title{Autonomous Navigation for Mobile Robots}
-\author{Sagar Khadse}
+\usepackage{listings}
+\usepackage[pdftex]{graphicx}
 
+\usepackage[cmex10]{amsmath}
+\usepackage{color}
+\usepackage{fancyhdr}
+\usepackage[caption=false,font=footnotesize]{subfig}
+
+\renewcommand{\thispagestyle}[2]{} 
+
+\fancypagestyle{plain}{
+        \fancyhead{}
+        \fancyhead[C]{first page center header}
+        \fancyfoot{}
+        \fancyfoot[C]{first page center footer}
+}
+\pagestyle{fancy}
+
+
+\headheight 31.99992pt
+\footskip 20pt
+
+\rhead{}
+
+% First page number
+\setcounter{page}{1}
+
+% Header
+\fancyhead[R]{\textit{
+  RIT Computer Science ~\textbullet~ Capstone Report ~\textbullet~ 2215
+}}
+\renewcommand{\headrulewidth}{0pt}
+
+% Footer
+\fancyfoot[C]{Rochester Institute of Technology}
+\renewcommand{\footrulewidth}{0.5pt}
+\fancyfoot[R]{\thepage \  $|$ P a g e }
+
+
+% Document starts here
 \begin{document}
+
+% Title
+\title{Autonomous Navigation for Mobile Robots}
+
+% Author
+\author{\IEEEauthorblockN{Sagar Khadse}
+\IEEEauthorblockA{
+  Department of Computer Science\\
+  Golisano College of Computing and Information Sciences\\
+  Rochester Institute of Technology\\
+  Rochester, NY 14586\\
+  sk9877@rit.edu
+}}
+
 \maketitle
+
+% Abstract
+\begin{abstract}
+The abstract goes here.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Keyword1; Keyword2; Keyword3
+\end{IEEEkeywords}
+
+\IEEEpeerreviewmaketitle
+
+% Introduction
+\section{Introduction}
+
+% Background
+\section{Background}
+
+% Conclusion
+\section{Conclusion}
+
+% References
+\nocite{*}
+\bibliographystyle{IEEEtran}
+\bibliography{IEEEabrv,report}
+
 \end{document}
+
+

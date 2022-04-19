@@ -1,5 +1,6 @@
 build/
 devel/
+data/
 
 # OSX files
 **/*.DS_Store
