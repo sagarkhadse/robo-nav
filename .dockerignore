@@ -1,0 +1,10 @@
+build/
+devel/
+data/
+Documentation/
+poster/
+report/
+src/CMakeLists.txt
+
+# OSX files
+**/*.DS_Store

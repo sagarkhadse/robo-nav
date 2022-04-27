@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  rtabmap:
+    build: .
+    volumes:
+      - .:/home/catkin_ws
+    
+    entrypoint: ./rtabmap_docker.sh
